@@ -134,20 +134,15 @@ int main()
     l.push_front(2);
      l.push_front(4);
       l.push_front(5);
-    //    l.push_back(5);
+       l.push_back(5);
 
       l.print();
-    //   l.pop_front();
-    //         l.print();
-    //         l.pop_back();
-    //         l.print();
-    //         l.push_midle(23,1);
-    //         l.print();
-    //         int n=l.search(23);
-    //         cout<<endl;
-
-    //         cout<<"N="<<n;
-
+  
+    l.pop_front();
+            l.print();
+            l.pop_back();
+            l.print();
+         
       return 0;
       
 
