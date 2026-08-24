@@ -1,0 +1,161 @@
+#include <iostream>
+using namespace std;
+
+class Node
+{
+public:
+    int data;
+    Node *prev;
+    Node *next;
+
+    Node(int value)
+    {
+        data = value;
+        prev = NULL;
+        next = NULL;
+    }
+};
+
+
+class Queue
+{
+private:
+    Node *head;
+    Node *tail;
+
+public:
+
+    // Constructor
+    Queue()
+    {
+        head = NULL;
+        tail = NULL;
+    }
+
+
+    // ENQUEUE operation
+    void enqueue(int value)
+    {
+        Node *newNode = new Node(value);
+
+        // If queue is empty
+        if(head == NULL)
+        {
+            head = newNode;
+            tail = newNode;
+        }
+        else
+        {
+            newNode->prev = tail;
+            tail->next = newNode;
+            tail = newNode;
+        }
+
+        cout << value << " inserted into queue\n";
+    }
+
+
+    // DEQUEUE operation
+    void dequeue()
+    {
+        if(head == NULL)
+        {
+            cout << "Queue Underflow\n";
+            return;
+        }
+
+        Node *temp = head;
+
+        cout << "Deleted element: " << head->data << endl;
+
+        // Only one node
+        if(head == tail)
+        {
+            head = NULL;
+            tail = NULL;
+        }
+        else
+        {
+            head = head->next;
+            head->prev = NULL;
+        }
+
+        delete temp;
+    }
+
+
+    // FRONT operation
+    void front()
+    {
+        if(head == NULL)
+        {
+            cout << "Queue is empty\n";
+            return;
+        }
+
+        cout << "Front element: " << head->data << endl;
+    }
+
+
+    // REAR operation
+    void rear()
+    {
+        if(tail == NULL)
+        {
+            cout << "Queue is empty\n";
+            return;
+        }
+
+        cout << "Rear element: " << tail->data << endl;
+    }
+
+
+    // DISPLAY operation
+    void display()
+    {
+        if(head == NULL)
+        {
+            cout << "Queue is empty\n";
+            return;
+        }
+
+        Node *temp = head;
+
+        cout << "Queue: ";
+
+        while(temp != NULL)
+        {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+
+        cout << endl;
+    }
+};
+
+
+int main()
+{
+    Queue q;
+
+    q.enqueue(10);
+    q.enqueue(20);
+    q.enqueue(30);
+    q.enqueue(40);
+
+    q.display();
+
+    q.front();
+
+    q.rear();
+
+    q.dequeue();
+
+    q.display();
+
+    q.dequeue();
+
+    q.display();
+
+    return 0;
+}
