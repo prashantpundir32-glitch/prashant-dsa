@@ -1,68 +1,94 @@
-#include<stdio.h>
-#include<limits.h>
-#include<stdlib.h>
+#include <iostream>
+using namespace std;
 
-void printArray(int *A, int n)
+class Stack
 {
-    for (int i = 0; i < n; i++)
+    int a[100];
+    int top;
+
+public:
+
+    Stack()
     {
-        printf("%d ", A[i]);
+        top = -1;
     }
-    printf("\n");
-}
 
-
-int maximum(int A[], int n){
-    int max = INT_MIN;
-    for (int i = 0; i < n; i++)
+    void push(int value)
     {
-        if (max < A[i]){
-            max = A[i];
+        if (top == 99)
+        {
+            cout << "Stack Overflow" << endl;
+        }
+        else
+        {
+            top++;
+            a[top] = value;
         }
     }
-    return max;
-    
-}
-void countSort(int * A, int n){
-    int i, j;
-    // Find the maximum element in A
-    int max = maximum(A, n); 
 
-    // Create the count array
-    int* count = (int *) malloc((max+1)*sizeof(int));
-
-    // Initialize the array elements to 0
-    for (i = 0; i < max+1; i++)
+    void pop()
     {
-        count[i] = 0; 
+        if (top == -1)
+        {
+            cout << "Stack Underflow" << endl;
+        }
+        else
+        {
+            cout << "Popped element is: " << a[top] << endl;
+            top--;
+        }
     }
 
-    // Increment the corresponding index in the count array
-    for (i = 0; i < n; i++)
+    void peek()
     {
-        count[A[i]] = count[A[i]] + 1; 
+        if (top == -1)
+        {
+            cout << "Stack is empty" << endl;
+        }
+        else
+        {
+            cout << "Top element is: " << a[top] << endl;
+        }
     }
 
-    i =0; // counter for count array
-    j =0; // counter for given array A
-
-    while(i<= max){
-        if(count[i]>0){
-            A[j] = i;
-            count[i] = count[i] - 1;
-            j++;
+    void display()
+    {
+        if (top == -1)
+        {
+            cout << "Stack is empty" << endl;
         }
-        else{
-            i++;
-        }
-    } 
-}
+        else
+        {
+            cout << "Stack elements are: ";
 
-int main(){
-    int A[] = {9, 1, 4, 14, 4, 15, 6};
-    int n = 7;
-    printArray(A, n);
-    countSort(A, n);
-    printArray(A, n); 
+            for (int i = top; i >= 0; i--)
+            {
+                cout << a[i] << " ";
+            }
+
+            cout << endl;
+        }
+    }
+};
+
+int main()
+{
+    Stack s;
+
+    s.push(10);
+    s.push(20);
+    s.push(30);
+    s.push(40);
+    s.push(50);
+
+    s.display();
+
+    s.peek();
+
+    s.pop();
+    s.pop();
+
+    s.display();
+
     return 0;
 }
