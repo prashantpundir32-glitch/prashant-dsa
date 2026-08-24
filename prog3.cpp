@@ -1,106 +1,157 @@
 #include <iostream>
 using namespace std;
 
-int main()
+class Array
 {
-    int arr[100], n, i, num, pos, del;
+private:
+    int arr[100];
+    int n;
+
+public:
+
+    // Constructor
+    Array()
+    {
+        n = 0;
+    }
 
     // Input array
-    cout << "Enter number of elements: ";
-    cin >> n;
-
-    cout << "Enter array elements: ";
-    for(i = 0; i < n; i++)
+    void input()
     {
-        cin >> arr[i];
+        cout << "Enter number of elements: ";
+        cin >> n;
+
+        cout << "Enter array elements: ";
+        for(int i = 0; i < n; i++)
+        {
+            cin >> arr[i];
+        }
     }
 
     // Insert at beginning
+    void insertBeginning(int num)
+    {
+        for(int i = n; i > 0; i--)
+        {
+            arr[i] = arr[i - 1];
+        }
+
+        arr[0] = num;
+        n++;
+    }
+
+    // Insert at a given position
+    void insertPosition(int pos, int num)
+    {
+        for(int i = n; i >= pos; i--)
+        {
+            arr[i] = arr[i - 1];
+        }
+
+        arr[pos - 1] = num;
+        n++;
+    }
+
+    // Insert at end
+    void insertEnd(int num)
+    {
+        arr[n] = num;
+        n++;
+    }
+
+    // Delete an element
+    void deleteElement(int del)
+    {
+        int found = 0;
+
+        for(int i = 0; i < n; i++)
+        {
+            if(arr[i] == del)
+            {
+                found = 1;
+
+                for(int j = i; j < n - 1; j++)
+                {
+                    arr[j] = arr[j + 1];
+                }
+
+                n--;
+                break;
+            }
+        }
+
+        if(found == 0)
+        {
+            cout << "Number not found.\n";
+        }
+    }
+
+    // Display array
+    void display()
+    {
+        for(int i = 0; i < n; i++)
+        {
+            cout << arr[i] << " ";
+        }
+        cout << endl;
+    }
+};
+
+
+int main()
+{
+    Array A;
+
+    // Input array
+    A.input();
+
+    // Insert at beginning
+    int num;
+
     cout << "\nEnter number to insert at beginning: ";
     cin >> num;
 
-    for(i = n; i > 0; i--)
-    {
-        arr[i] = arr[i - 1];
-    }
-
-    arr[0] = num;
-    n++;
+    A.insertBeginning(num);
 
     cout << "Array after inserting at beginning: ";
-    for(i = 0; i < n; i++)
-    {
-        cout << arr[i] << " ";
-    }
+    A.display();
 
-    // Insert in middle
-    cout << "\n\nEnter position to insert (1 to " << n + 1 << "): ";
+
+    // Insert in middle / position
+    int pos;
+
+    cout << "\nEnter position to insert (1 to " << "100" << "): ";
     cin >> pos;
 
     cout << "Enter number to insert: ";
     cin >> num;
 
-    for(i = n; i >= pos; i--)
-    {
-        arr[i] = arr[i - 1];
-    }
+    A.insertPosition(pos, num);
 
-    arr[pos - 1] = num;
-    n++;
+    cout << "Array after inserting at position: ";
+    A.display();
 
-    cout << "Array after inserting in middle: ";
-    for(i = 0; i < n; i++)
-    {
-        cout << arr[i] << " ";
-    }
 
     // Insert at end
-    cout << "\n\nEnter number to insert at end: ";
+    cout << "\nEnter number to insert at end: ";
     cin >> num;
 
-    arr[n] = num;
-    n++;
+    A.insertEnd(num);
 
     cout << "Array after inserting at end: ";
-    for(i = 0; i < n; i++)
-    {
-        cout << arr[i] << " ";
-    }
+    A.display();
 
-    // Delete a number
-    cout << "\n\nEnter number to delete: ";
+
+    // Delete
+    int del;
+
+    cout << "\nEnter number to delete: ";
     cin >> del;
 
-    int found = 0;
+    A.deleteElement(del);
 
-    for(i = 0; i < n; i++)
-    {
-        if(arr[i] == del)
-        {
-            found = 1;
-
-            for(int j = i; j < n - 1; j++)
-            {
-                arr[j] = arr[j + 1];
-            }
-
-            n--;
-            break;
-        }
-    }
-
-    if(found == 0)
-    {
-        cout << "Number not found.";
-    }
-    else
-    {
-        cout << "Array after deletion: ";
-        for(i = 0; i < n; i++)
-        {
-            cout << arr[i] << " ";
-        }
-    }
+    cout << "Array after deletion: ";
+    A.display();
 
     return 0;
 }
