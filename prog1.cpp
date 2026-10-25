@@ -1,16 +1,19 @@
-#include<iostream>
+//  if a ball is dropped from height h then after how many tips the ball will stops 
+
+#include <iostream>
 using namespace std;
-int main()
-{
-    int count =0;
-    float speed ;
-    cout<<"Enter the speed of the vehicle: ";
-    cin>>speed;
-    while(speed>0.001)
-    {
-        speed=speed/2;
+
+void noOFTips(float speed ){
+    int count=0;
+    while(speed>0.001){
         count++;
-        
+        speed=speed/2;
     }
-    cout<<"Number of times the ball bounces back from the ground: "<<count<<endl;
+    cout<<"No. of tips after ball will stop: "<<count<<endl;
+
+}
+
+int main() {
+    noOFTips(30);
+    return 0;
 }
