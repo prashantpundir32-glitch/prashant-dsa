@@ -1,181 +1,275 @@
+
 #include <iostream>
 #include <algorithm>
 using namespace std;
 
 class Node {
 public:
-int data;
-Node* left;
-Node* right;
-int height;
+    int data, height;
+    Node* left;
+    Node* right;
 
-
-Node(int val) {
-    data = val;
-    left = NULL;
-    right = NULL;
-    height = 0;
-}
-
-
+    Node(int value) {
+        data = value;
+        height = 0;
+        left = right = nullptr;
+    }
 };
 
-int getHeight(Node* root) {
-if (root == NULL) {
-return -1;
-}
-return root->height;
-}
+class AVLTree {
+    Node* root;
 
-int getBalanceFactor(Node* root) {
-if (root == NULL) {
-return 0;
-}
+    int height(Node* node) {
+        return (node == nullptr) ? -1 : node->height;
+    }
 
+    int balance(Node* node) {
+        if (node == nullptr)
+            return 0;
 
-return getHeight(root->left) - getHeight(root->right);
+        return height(node->left) - height(node->right);
+    }
 
+    void updateHeight(Node* node) {
+        node->height = 1 + max(height(node->left),
+                               height(node->right));
+    }
 
-}
+    Node* rightRotate(Node* z) {
+        Node* y = z->left;
+        Node* T2 = y->right;
 
-void updateHeight(Node* root) {
-if (root == NULL) {
-return;
-}
+        y->right = z;
+        z->left = T2;
 
-root->height = max(getHeight(root->left),
-                   getHeight(root->right)) + 1;
+        updateHeight(z);
+        updateHeight(y);
 
+        return y;
+    }
 
-}
+    Node* leftRotate(Node* z) {
+        Node* y = z->right;
+        Node* T2 = y->left;
 
-// Right Rotation
-Node* rightRotate(Node* y) {
-Node* x = y->left;
-Node* T2 = x->right;
-x->right = y;
-y->left = T2;
+        y->left = z;
+        z->right = T2;
 
-updateHeight(y);
-updateHeight(x);
+        updateHeight(z);
+        updateHeight(y);
 
-return x;
-}
+        return y;
+    }
 
-// Left Rotation
-Node* leftRotate(Node* x) {
-Node* y = x->right;
-Node* T2 = y->left;
+    // INSERTION
+    Node* insert(Node* node, int value) {
+        if (node == nullptr)
+            return new Node(value);
 
-y->left = x;
-x->right = T2;
+        if (value < node->data)
+            node->left = insert(node->left, value);
+        else if (value > node->data)
+            node->right = insert(node->right, value);
+        else
+            return node;
 
-updateHeight(x);
-updateHeight(y);
+        updateHeight(node);
 
-return y;
+        int bf = balance(node);
 
-}
+        // LL
+        if (bf > 1 && value < node->left->data)
+            return rightRotate(node);
 
-// Inorder Traversal
-void inOrder(Node* root) {
-if (root == NULL) {
-return;
-}
+        // RR
+        if (bf < -1 && value > node->right->data)
+            return leftRotate(node);
 
-inOrder(root->left);
-cout << root->data << " ";
-inOrder(root->right);
+        // LR
+        if (bf > 1 && value > node->left->data) {
+            node->left = leftRotate(node->left);
+            return rightRotate(node);
+        }
 
+        // RL
+        if (bf < -1 && value < node->right->data) {
+            node->right = rightRotate(node->right);
+            return leftRotate(node);
+        }
 
-}
+        return node;
+    }
 
-// Preorder Traversal
-void preOrder(Node* root) {
-if (root == NULL) {
-return;
-}
+    Node* minNode(Node* node) {
+        while (node->left != nullptr)
+            node = node->left;
 
-cout << root->data << " ";
-preOrder(root->left);
-preOrder(root->right);
+        return node;
+    }
 
-}
+    // DELETION
+    Node* deleteNode(Node* node, int value) {
+        if (node == nullptr)
+            return nullptr;
 
-// AVL Insertion
-Node* insert(Node* root, int val) {
+        if (value < node->data)
+            node->left = deleteNode(node->left, value);
 
-// Normal BST insertion
-if (root == NULL) {
-    return new Node(val);
-}
+        else if (value > node->data)
+            node->right = deleteNode(node->right, value);
 
-if (val < root->data) {
-    root->left = insert(root->left, val);
-}
-else if (val > root->data) {
-    root->right = insert(root->right, val);
-}
-else {
-    return root;  // Ignore duplicate values
-}
+        else {
+            // Zero or one child
+            if (node->left == nullptr ||
+                node->right == nullptr) {
 
-// Update height
-updateHeight(root);
+                Node* child = (node->left != nullptr)
+                                  ? node->left
+                                  : node->right;
 
-// Calculate balance factor
-int balanceFactor = getBalanceFactor(root);
+                if (child == nullptr) {
+                    delete node;
+                    return nullptr;
+                }
 
-// LL Case
-if (balanceFactor > 1 && val < root->left->data) {
-    return rightRotate(root);
-}
+                Node* oldNode = node;
+                node = child;
+                delete oldNode;
+            }
+            // Two children
+            else {
+                Node* successor = minNode(node->right);
+                node->data = successor->data;
 
-// LR Case
-if (balanceFactor > 1 && val > root->left->data) {
-    root->left = leftRotate(root->left);
-    return rightRotate(root);
-}
+                node->right = deleteNode(node->right,
+                                         successor->data);
+            }
+        }
 
-// RR Case
-if (balanceFactor < -1 && val > root->right->data) {
-    return leftRotate(root);
-}
+        if (node == nullptr)
+            return nullptr;
 
-// RL Case
-if (balanceFactor < -1 && val < root->right->data) {
-    root->right = rightRotate(root->right);
-    return leftRotate(root);
-}
+        updateHeight(node);
 
-return root;
+        int bf = balance(node);
 
+        // LL
+        if (bf > 1 && balance(node->left) >= 0)
+            return rightRotate(node);
 
-}
+        // LR
+        if (bf > 1 && balance(node->left) < 0) {
+            node->left = leftRotate(node->left);
+            return rightRotate(node);
+        }
+
+        // RR
+        if (bf < -1 && balance(node->right) <= 0)
+            return leftRotate(node);
+
+        // RL
+        if (bf < -1 && balance(node->right) > 0) {
+            node->right = rightRotate(node->right);
+            return leftRotate(node);
+        }
+
+        return node;
+    }
+
+    // SEARCHING
+    Node* search(Node* node, int value) {
+        if (node == nullptr || node->data == value)
+            return node;
+
+        if (value < node->data)
+            return search(node->left, value);
+
+        return search(node->right, value);
+    }
+
+    // PREORDER
+    void preorder(Node* node) {
+        if (node == nullptr)
+            return;
+
+        cout << node->data << " ";
+        preorder(node->left);
+        preorder(node->right);
+    }
+
+public:
+    AVLTree() {
+        root = nullptr;
+    }
+
+    void insert(int value) {
+        root = insert(root, value);
+    }
+
+    void remove(int value) {
+        root = deleteNode(root, value);
+    }
+
+    void searchValue(int value) {
+        if (search(root, value) != nullptr)
+            cout << "Value found\n";
+        else
+            cout << "Value not found\n";
+    }
+
+    void showPreorder() {
+        preorder(root);
+        cout << endl;
+    }
+};
 
 int main() {
-Node* root = NULL;
+    AVLTree tree;
+    int choice, value;
 
+    do {
+        cout << "\n1. Insert\n";
+        cout << "2. Delete\n";
+        cout << "3. Search\n";
+        cout << "4. Preorder\n";
+        cout << "0. Exit\n";
 
-root = insert(root, 10);
-root = insert(root, 20);
-root = insert(root, 30);
-root = insert(root, 40);
-root = insert(root, 50);
-root = insert(root, 25);
+        cout << "Enter choice: ";
+        cin >> choice;
 
-cout << "Preorder Traversal: ";
-preOrder(root);
+        switch (choice) {
+            case 1:
+                cout << "Enter value: ";
+                cin >> value;
+                tree.insert(value);
+                break;
 
-cout << "\nInorder Traversal: ";
-inOrder(root);
+            case 2:
+                cout << "Enter value to delete: ";
+                cin >> value;
+                tree.remove(value);
+                break;
 
-cout << "\nHeight of AVL Tree: "
-     << getHeight(root);
+            case 3:
+                cout << "Enter value to search: ";
+                cin >> value;
+                tree.searchValue(value);
+                break;
 
-cout << endl;
+            case 4:
+                cout << "Preorder: ";
+                tree.showPreorder();
+                break;
 
-return 0;
+            case 0:
+                cout << "Program ended\n";
+                break;
 
+            default:
+                cout << "Invalid choice\n";
+        }
 
+    } while (choice != 0);
+
+    return 0;
 }
