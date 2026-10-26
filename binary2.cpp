@@ -17,7 +17,7 @@ public:
         height = 0;
     }
 };
-bool sea
+
 void height(node* root)
 {
     if (root == NULL)
