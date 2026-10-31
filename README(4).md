@@ -1,8 +1,5 @@
 # Prashant DSA — Detailed Program Guide
 
-A collection of C++ programs for practising Data Structures and Algorithms (DSA), sorting, searching, linked lists, stacks, queues, binary trees, heaps, recursion, and basic mathematical problems.
-
-> **Important:** This guide describes the behaviour of the source files in this repository. Some files have names that do not match their actual contents, and a few implementations have edge cases or bugs. Those are called out in the relevant sections so the explanation stays faithful to the code rather than describing an idealised version.
 
 ## Table of Contents
 
@@ -1045,87 +1042,8 @@ The input should be a positive integer. The current code only explicitly handles
 
 *Complexities describe the standard operation or intended algorithm. Where the current source has implementation issues, the actual behaviour may differ.*
 
----
 
-# Compile and Run
 
-## Compile one C++ file
 
-Install a C++ compiler such as GCC, then open a terminal in the repository folder.
 
-Example for merge sort:
 
-```bash
-g++ mergesort.cpp -o mergesort
-```
-
-Run on Windows:
-
-```bash
-.\mergesort.exe
-```
-
-Run on Linux/macOS:
-
-```bash
-./mergesort
-```
-
-For a file without the `.cpp` extension, pass its exact filename to the compiler. For example:
-
-```bash
-g++ "insertion _in_arrayas_adt" -o array_adt
-```
-
-If your compiler expects a C++ standard, you can specify one:
-
-```bash
-g++ -std=c++17 mergesort.cpp -o mergesort
-```
-
-## Open the repository in VS Code
-
-1. Extract the ZIP file.
-2. Open VS Code.
-3. Select **File → Open Folder**.
-4. Choose the extracted `prashant-dsa-main` folder.
-5. Open the source file you want to practise.
-6. Compile and run that file separately.
-
----
-
-# Suggested Improvements
-
-These notes are based on the current source files and are useful next steps:
-
-1. **Rename files to match their contents.** `countsort.cpp` currently contains a stack implementation; `queueusinglinklist.cpp` contains a class named `stack` but its insert-at-tail/remove-at-head behaviour is FIFO.
-2. **Add empty-list checks.** Linked-list `pop`, `print`, and search functions should handle empty lists.
-3. **Handle single-node deletion.** When deleting the only node, both `head` and `tail` must become `NULL`.
-4. **Validate array bounds.** Array ADT insertion should check capacity and validate the requested position.
-5. **Fix missing return values.** `binary2.cpp` should declare `sumOfNodes()` and `countNodes()` with return type `int`.
-6. **Fix quadratic-root arithmetic.** Use parentheses around `2*a` and avoid calling `sqrt()` on a negative discriminant for real-root calculations.
-7. **Review the zero-shifting implementation.** `zeroatlast.cpp` changes the logical length while scanning and may skip or misplace values.
-8. **Review duplicate detection.** `firstduplicate.cpp` has an outer-loop `break` that prevents checking all starting positions.
-9. **Add bounds checks to quick sort partitioning.** The pointer scans in `quicksort2.cpp` and `k_small.cpp` should guard against moving outside the current range.
-10. **Use standard C++ arrays or vectors where appropriate.** Variable-length arrays such as `int arr[n]` are not part of standard C++.
-11. **Add complexity and sample output to each program.** This makes the repository easier to revise for practical exams and interviews.
-12. **Use consistent naming and formatting.** Choose consistent names such as `Node`, `head`, `tail`, `enqueue`, and `dequeue` to make the data structures easier to understand.
-
----
-
-## Learning Order
-
-A useful order for studying the programs is:
-
-1. Basic loops and mathematical programs.
-2. Array operations and linear search.
-3. Sorting algorithms: selection, insertion, merge, quick, heap, radix, and bucket sort.
-4. Singly, doubly, and circular linked lists.
-5. Stacks and queues using arrays.
-6. Stacks and queues using linked lists.
-7. Binary-tree traversal and properties.
-8. Binary search trees.
-9. AVL trees and rotations.
-10. Heaps and recursive problems such as Tower of Hanoi.
-
-The goal of this repository is not only to memorise code, but also to understand **why each pointer changes, how each loop progresses, what the base cases do, and how the data structure changes after every operation**.
